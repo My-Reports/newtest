@@ -102,9 +102,9 @@ let currentLang = localStorage.getItem("lang") || "ar";
    USERS & REPORTS
 ---------------------------------------------------------------- */
 const users = {
-  sales:   { "sales.user1": "Sale@123", "sr": "sr123" },
-  finance: { "finance.user1": "Fin@123", "sr": "sr123" },
-  busdev:  { "sales.user1": "Sale@123", "sr": "sr123" }
+  sales:   { "khaled.kayed": "k.k123", "sofian.rajab": "s.r123","bana.bana": "b.b123" },
+  finance: { "aseel.ibrahem": "a.i123", "sofian.rajab": "s.r123","bana.bana": "b.b123" },
+  busdev:  { "khaled.kayed": "k.k123", "sofian.rajab": "s.r123","bana.bana": "b.b123" }
 };
 
 const reports = {
@@ -216,11 +216,13 @@ function setThemeByDept(dept) {
 function updateWelcomeMessage() {
   if (currentUser && userWelcome && userWelcomeText) {
     userWelcome.hidden = false;
-    // Extract cleaner name (e.g. from "sales.user1" -> "User1")
-    let cleanName = currentUser.includes('.') ? currentUser.split('.')[1] : currentUser;
-    cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
     
-    userWelcomeText.textContent = `${i18n[currentLang].welcomeUserText}، ${cleanName}`;
+    // استخراج الاسم بالكامل، استبدال النقطة بمسافة، وتكبير أول حرف من كل مقطع
+    let fullName = currentUser.split('.').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+    
+    userWelcomeText.textContent = `${i18n[currentLang].welcomeUserText}، ${fullName}`;
   } else if (userWelcome) {
     userWelcome.hidden = true;
   }
