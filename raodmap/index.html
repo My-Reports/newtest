@@ -150,7 +150,6 @@
         .stat-card { 
             background: var(--card-bg); backdrop-filter: blur(10px); padding: 25px; border-radius: 12px; text-align: center; 
             border: 1px solid rgba(255,255,255,0.05); border-bottom: 4px solid var(--accent-blue); transition: 0.3s; 
-            /* 3D Emboss & Shadow */
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.15), inset 0 -4px 6px rgba(0,0,0,0.4);
         }
         .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 45px rgba(0,0,0,0.7), inset 0 2px 5px rgba(255,255,255,0.2), inset 0 -4px 6px rgba(0,0,0,0.4);}
@@ -162,7 +161,6 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.1);
         }
         .chart-container { position: relative; height: 320px; width: 100%; display: flex; justify-content: center; margin-top: 10px;}
-        /* 3D Drop Shadow for Canvas Elements */
         .chart-container canvas { 
             filter: drop-shadow(5px 15px 12px rgba(0,0,0,0.8)) drop-shadow(-2px -2px 4px rgba(255,255,255,0.1)); 
         }
@@ -191,9 +189,9 @@
         .view-section.active { display: flex; flex-direction: column; }
 
         /* Dynamic Hiding Classes */
-        body.hide-molecules #fg_molecules, body.hide-molecules .col_molecules, body.hide-molecules #card_molecules { display: none !important; }
         body.hide-products #fg_products, body.hide-products .col_products, body.hide-products #card_products { display: none !important; }
         body.hide-skus #fg_skus, body.hide-skus .col_skus, body.hide-skus #card_skus { display: none !important; }
+        body.hide-skus2 #fg_skus2, body.hide-skus2 .col_skus2, body.hide-skus2 #card_skus2 { display: none !important; }
         body.hide-suppliers #fg_suppliers, body.hide-suppliers .col_suppliers, body.hide-suppliers #card_suppliers { display: none !important; }
         body.hide-status #fg_status, body.hide-status .col_status, body.hide-status #card_status { display: none !important; }
         body.hide-milestones #fg_milestones, body.hide-milestones .col_milestones, body.hide-milestones #card_milestones { display: none !important; }
@@ -214,7 +212,7 @@
             <h3 data-i18n="edit_title" style="color: var(--accent-blue); margin-top:0; border-bottom:1px solid #334155; padding-bottom:15px;">تحديث تواريخ الإنجاز (Update Dates)</h3>
             <div class="form-grid" style="margin-top: 20px;">
                 <div class="form-group" style="grid-column: 1 / -1; display:flex; flex-direction:row; gap:10px;">
-                    <input type="text" id="editMoleculeBrand" readonly style="background-color: rgba(0,0,0,0.5); color: var(--accent-blue); font-weight:bold; flex:1.5; cursor: not-allowed; border: 1px solid #334155;">
+                    <input type="text" id="editItemName" readonly style="background-color: rgba(0,0,0,0.5); color: var(--accent-blue); font-weight:bold; flex:1.5; cursor: not-allowed; border: 1px solid #334155;">
                     <input type="text" id="editMilestone" readonly style="background-color: rgba(0,0,0,0.5); color: #94a3b8; flex:1; cursor: not-allowed; border: 1px solid #334155;">
                 </div>
                 
@@ -243,20 +241,6 @@
             <div class="btn-group" style="margin-top: 25px;">
                 <button class="btn-add" onclick="saveUpdate()" data-i18n="btn_save">💾 حفظ التحديث (Save)</button>
                 <button class="btn-clear" onclick="closeUpdateModal()" data-i18n="btn_cancel">إلغاء (Cancel)</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="deleteListModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 450px;">
-            <h3 data-i18n="btn_del_list" style="color: #ef4444; margin-top:0; border-bottom:1px solid #334155; padding-bottom:15px;">حذف قائمة إعدادات (Delete List)</h3>
-            <div class="form-group" style="margin-top: 20px;">
-                <label>اختر القائمة المراد حذفها نهائياً:</label>
-                <select id="listToDelete"></select>
-            </div>
-            <div class="btn-group" style="margin-top: 25px;">
-                <button class="btn-add" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="confirmDeleteList()">🗑️ حذف القائمة</button>
-                <button class="btn-clear" onclick="closeDeleteListModal()" data-i18n="btn_cancel">إلغاء (Cancel)</button>
             </div>
         </div>
     </div>
@@ -303,9 +287,9 @@
             <div id="view-tracker" class="container view-section">
                 <div class="card">
                     <form id="trackerForm" class="form-grid">
-                        <div class="form-group" id="fg_molecules">
-                            <label data-i18n="lbl_molecule">المادة الفعالة (Molecules)</label>
-                            <select id="moleculeName" required></select>
+                        <div class="form-group" id="fg_skus2">
+                            <label data-i18n="lbl_sku2">Molecules Name</label>
+                            <select id="sku2Name" required></select>
                         </div>
                         <div class="form-group" id="fg_products">
                             <label data-i18n="lbl_product">العلامة التجارية (Brand Name) - <span style="font-weight:normal; color:#64748b">اختياري</span></label>
@@ -357,9 +341,9 @@
                     <table id="dataTableTracker">
                         <thead>
                             <tr>
-                                <th class="col_molecules"><span data-i18n="th_molecule">المادة الفعالة</span> <input type="text" class="filter-input filter-tracker" onkeyup="applyFilters('dataTableTracker', 'filter-tracker')"></th>
                                 <th class="col_products"><span data-i18n="th_product">العلامة</span> <input type="text" class="filter-input filter-tracker" onkeyup="applyFilters('dataTableTracker', 'filter-tracker')"></th>
                                 <th class="col_skus"><span data-i18n="th_sku">SKU</span> <input type="text" class="filter-input filter-tracker" onkeyup="applyFilters('dataTableTracker', 'filter-tracker')"></th>
+                                <th class="col_skus2"><span data-i18n="th_sku2">Molecules Name</span> <input type="text" class="filter-input filter-tracker" onkeyup="applyFilters('dataTableTracker', 'filter-tracker')"></th>
                                 <th class="col_suppliers"><span data-i18n="th_supplier">المورد</span> <input type="text" class="filter-input filter-tracker" onkeyup="applyFilters('dataTableTracker', 'filter-tracker')"></th>
                                 <th class="col_milestones"><span data-i18n="th_milestone">المرحلة</span> <input type="text" class="filter-input filter-tracker" onkeyup="applyFilters('dataTableTracker', 'filter-tracker')"></th>
                                 <th class="nowrap-col" data-i18n="th_start">البداية المخططة</th>
@@ -387,9 +371,9 @@
                     <table id="dataTableFollowup">
                         <thead>
                             <tr>
-                                <th class="col_molecules"><span data-i18n="th_molecule">المادة الفعالة</span> <input type="text" class="filter-input filter-fw" onkeyup="applyFilters('dataTableFollowup', 'filter-fw')"></th>
                                 <th class="col_products"><span data-i18n="th_product">العلامة</span> <input type="text" class="filter-input filter-fw" onkeyup="applyFilters('dataTableFollowup', 'filter-fw')"></th>
                                 <th class="col_skus"><span data-i18n="th_sku">SKU</span> <input type="text" class="filter-input filter-fw" onkeyup="applyFilters('dataTableFollowup', 'filter-fw')"></th>
+                                <th class="col_skus2"><span data-i18n="th_sku2">Molecules Name</span> <input type="text" class="filter-input filter-fw" onkeyup="applyFilters('dataTableFollowup', 'filter-fw')"></th>
                                 <th class="col_milestones"><span data-i18n="th_milestone">المرحلة</span> <input type="text" class="filter-input filter-fw" onkeyup="applyFilters('dataTableFollowup', 'filter-fw')"></th>
                                 <th class="nowrap-col" data-i18n="th_start">البداية المخططة</th>
                                 <th class="nowrap-col" data-i18n="th_actual_start" style="color:#60a5fa">بدء فعلي</th>
@@ -448,21 +432,8 @@
             </div>
 
             <div id="view-config" class="container view-section">
-                
                 <div class="config-page-layout">
                     <div class="config-column" id="leftConfigColumn">
-                        
-                        <div class="config-card" id="card_molecules">
-                            <div class="config-summary" onclick="toggleConfig(this)">
-                                <h3 data-i18n="conf_mol_title">المواد الفعالة Molecules (A-Z)</h3>
-                                <span class="caret">▼</span>
-                            </div>
-                            <div class="config-content">
-                                <div style="display:flex; gap:10px;"><input type="text" id="newMoleculeInput"><button class="btn-add-sm" onclick="addConfig('molecules')" data-i18n="btn_add_sm">إضافة</button></div>
-                                <ul class="config-list" id="moleculesList"></ul>
-                            </div>
-                        </div>
-
                         <div class="config-card" id="card_products">
                             <div class="config-summary" onclick="toggleConfig(this)">
                                 <h3 data-i18n="conf_p_title">العلامات التجارية Brands (A-Z)</h3>
@@ -482,6 +453,17 @@
                             <div class="config-content">
                                 <div style="display:flex; gap:10px;"><input type="text" id="newSkuInput"><button class="btn-add-sm" onclick="addConfig('skus')" data-i18n="btn_add_sm">إضافة</button></div>
                                 <ul class="config-list" id="skusList"></ul>
+                            </div>
+                        </div>
+
+                        <div class="config-card" id="card_skus2">
+                            <div class="config-summary" onclick="toggleConfig(this)">
+                                <h3 data-i18n="conf_sku2_title">Molecules Names (A-z)</h3>
+                                <span class="caret">▼</span>
+                            </div>
+                            <div class="config-content">
+                                <div style="display:flex; gap:10px;"><input type="text" id="newSku2Input"><button class="btn-add-sm" onclick="addConfig('skus2')" data-i18n="btn_add_sm">إضافة</button></div>
+                                <ul class="config-list" id="skus2List"></ul>
                             </div>
                         </div>
                         
@@ -506,9 +488,6 @@
                                 <ul class="config-list" id="statusList"></ul>
                             </div>
                         </div>
-                        
-                        <div id="dynamicConfigsContainer" style="display:contents;"></div>
-
                     </div>
 
                     <div class="config-column">
@@ -523,11 +502,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div style="grid-column: 1 / -1; text-align:center; margin-top: 30px; margin-bottom: 30px; display:flex; flex-direction:column; gap:15px; align-items:center;">
-                    <button class="btn-add" style="width: auto; min-width: 350px; max-width: 450px; padding: 12px 25px; border-radius: 25px;" onclick="addNewCustomList()" data-i18n="btn_add_new_list">➕ Add New Configuration List</button>
-                    <button class="btn-delete" style="width: auto; min-width: 350px; max-width: 450px; padding: 12px 25px; border-radius: 25px; font-weight:bold;" onclick="openDeleteListModal()" data-i18n="btn_del_list">🗑️ Delete Configuration List</button>
                 </div>
             </div>
 
@@ -554,19 +528,22 @@
 
         // --- Utils & State ---
         let milestonesData = [];
-        let confMolecules = [], confProducts = [], confSkus = [], confSuppliers = [], confMilestones = [], confStatus = [];
-        let customLists = {}; 
-        let hiddenCoreLists = []; // Array to store permanently deleted core lists
+        let confProducts = [], confSkus = [], confSkus2 = [], confSuppliers = [], confMilestones = [], confStatus = [];
+        let hiddenCoreLists = [];
         
         let chartStatusInstance=null, chartBrandsInstance=null, chartBottleneckInstance=null, chartSupplierInstance=null;
         let chartStatusState = { mode: 'main', currentStatus: null }; 
         
         const ADMIN_PWD = "1234";
 
-        const coreListsMap = { 'molecules': 'conf_mol_title', 'products': 'conf_p_title', 'skus': 'conf_sku_title', 'suppliers': 'conf_supplier_title', 'status': 'conf_s_title', 'milestones': 'conf_m_title' };
-        const corePropsMap = { 'molecules': 'molecule', 'products': 'productName', 'skus': 'skuName', 'suppliers': 'supplier', 'status': 'mainStatus', 'milestones': 'milestone' };
+        const coreListsMap = { 'products': 'conf_p_title', 'skus': 'conf_sku_title', 'skus2': 'conf_sku2_title', 'suppliers': 'conf_supplier_title', 'status': 'conf_s_title', 'milestones': 'conf_m_title' };
+        const corePropsMap = { 'products': 'productName', 'skus': 'skuName', 'skus2': 'sku2Name', 'suppliers': 'supplier', 'status': 'mainStatus', 'milestones': 'milestone' };
 
-        function sortArray(arr) { return arr.sort((a,b) => a.localeCompare(b)); }
+        function sortArray(arr) { 
+            if (!arr) return [];
+            const items = Array.isArray(arr) ? arr : Object.values(arr);
+            return items.filter(Boolean).sort((a,b) => String(a).localeCompare(String(b))); 
+        }
 
         function updateWelcomeText() { document.getElementById('welcomeUserText').innerText = currentLang === 'ar' ? `مرحباً بك` : `Welcome`; }
 
@@ -606,29 +583,27 @@
         const translations = {
             ar: {
                 tab_tracker: "📝 الخطة (Forecast)", tab_followup: "🔄 التحديث الفعلي (Actuals)", tab_reports: "📊 لوحات القياس (Dashboards)", tab_config: "⚙️ الإعدادات (Config)", btn_logout: "🚪 العودة للبداية",
-                lbl_molecule: "المادة الفعالة (Molecules)", lbl_product: "العلامة (Brand) - اختياري", lbl_sku: "رمز الوحدة (SKU)", lbl_supplier: "المورد", lbl_milestone: "المرحلة", lbl_status: "الحالة الوصفية", lbl_notes: "ملاحظات",
+                lbl_product: "العلامة (Brand) - اختياري", lbl_sku: "رمز الوحدة (SKU)", lbl_sku2: "المادة الفعالة (Molecules Name)", lbl_supplier: "المورد", lbl_milestone: "المرحلة", lbl_status: "الحالة الوصفية", lbl_notes: "ملاحظات",
                 lbl_start: "تاريخ البدء المخطط", lbl_end: "تاريخ الانتهاء المخطط", lbl_actual_start: "بدء فعلي", lbl_actual_end: "نهاية فعلية",
                 btn_add_forecast: "➕ إضافة لخطة التوقع", btn_export: "📊 تصدير إكسيل", btn_save: "💾 حفظ التحديث", btn_cancel: "إلغاء", btn_add_sm: "إضافة", 
-                btn_add_new_list: "➕ أضف قائمة إعدادات جديدة (Add New Configuration List)", btn_del_list: "🗑️ حذف قائمة إعدادات (Delete Configuration List)",
-                th_molecule: "المادة الفعالة", th_product: "العلامة", th_sku: "SKU", th_supplier: "المورد", th_notes: "ملاحظات", th_milestone: "المرحلة", th_status: "الحالة", th_start: "بداية مخططة", th_end: "نهاية مخططة", th_actual_start: "بدء فعلي", th_actual_end: "نهاية فعلية", th_progress: "حالة (Auto)", th_view: "المسار", th_action: "إجراءات",
+                th_product: "العلامة", th_sku: "SKU", th_sku2: "Molecules Name", th_supplier: "المورد", th_notes: "ملاحظات", th_milestone: "المرحلة", th_status: "الحالة", th_start: "بداية مخططة", th_end: "نهاية مخططة", th_actual_start: "بدء فعلي", th_actual_end: "نهاية فعلية", th_progress: "حالة (Auto)", th_view: "المسار", th_action: "إجراءات",
                 followup_title: "شاشة المتابعة والتحديث الفعلي", followup_desc: "تحديث التواريخ وحالة التنفيذ الأوتوماتيكية.", edit_title: "تحديث تواريخ الإنجاز",
                 dash_brands: "إجمالي السجلات الموثقة", dash_miles: "المراحل المخططة", dash_completed: "المراحل المكتملة", dash_delayed: "المراحل المتأخرة", chart_status_title: "توزيع حالات الإنجاز (اضغط للتفاصيل)", chart_brand_title: "نسبة الإنجاز", chart_delayed_title: "المراحل الأكثر تأخراً (Bottlenecks)", chart_supplier_title: "توزيع الإنجاز حسب المورد",
-                conf_mol_title: "المواد الفعالة Molecules (A-Z)", conf_p_title: "العلامات التجارية Brands (A-Z)", conf_sku_title: "رموز الوحدات SKUs (A-Z)", conf_supplier_title: "الموردين (A-Z)", conf_m_title: "المراحل (ترتيب مخصص)", conf_s_title: "الحالات الوصفية (A-Z)",
+                conf_p_title: "العلامات التجارية Brands (A-Z)", conf_sku_title: "رموز الوحدات SKUs (A-Z)", conf_sku2_title: "المواد الفعالة Molecules Names (A-Z)", conf_supplier_title: "الموردين (A-Z)", conf_m_title: "المراحل (ترتيب مخصص)", conf_s_title: "الحالات الوصفية (A-Z)",
                 status_notstarted: "لم يبدأ ⏳", status_delayed: "متأخر 🚨", status_progress: "قيد التنفيذ 🔄", status_completed: "مكتمل ✅",
-                msg_dup_conf: "الإدخال موجود مسبقاً!", msg_dup_mile: "تنبيه: لا يمكن الإضافة! المرحلة موجودة لنفس المادة والـ SKU.", msg_overlap: "تنبيه: يوجد تداخل في التواريخ المخططة مع مرحلة أخرى لنفس المادة والـ SKU.", msg_date_err: "خطأ: البداية المخططة يجب أن تكون قبل النهاية!", msg_cannot_delete: "عذراً، لا يمكن الحذف! هذه القائمة أو العنصر مستخدم بالفعل في سجلات الأدوية المحفوظة."
+                msg_dup_conf: "الإدخال موجود مسبقاً!", msg_dup_mile: "تنبيه: لا يمكن الإضافة! المرحلة موجودة لنفس العلامة والـ SKU.", msg_overlap: "تنبيه: يوجد تداخل في التواريخ المخططة مع مرحلة أخرى لنفس الـ SKU.", msg_date_err: "خطأ: البداية المخططة يجب أن تكون قبل النهاية!", msg_cannot_delete: "عذراً، لا يمكن الحذف! هذه القائمة مستخدمة."
             },
             en: {
                 tab_tracker: "📝 Forecast", tab_followup: "🔄 Actuals Update", tab_reports: "📊 Dashboards", tab_config: "⚙️ Config", btn_logout: "🚪 Start Screen",
-                lbl_molecule: "Molecules", lbl_product: "Brand Name - Optional", lbl_sku: "SKU", lbl_supplier: "Supplier", lbl_milestone: "Milestone", lbl_status: "Desc Status", lbl_notes: "Notes",
+                lbl_product: "Brand Name - Optional", lbl_sku: "SKU", lbl_sku2: "Molecules Name", lbl_supplier: "Supplier", lbl_milestone: "Milestone", lbl_status: "Desc Status", lbl_notes: "Notes",
                 lbl_start: "Plan Start", lbl_end: "Plan End", lbl_actual_start: "Actual Start", lbl_actual_end: "Actual End",
                 btn_add_forecast: "➕ Add Forecast", btn_export: "📊 Export Excel", btn_save: "💾 Save Update", btn_cancel: "Cancel", btn_add_sm: "Add", 
-                btn_add_new_list: "➕ Add New Configuration List", btn_del_list: "🗑️ Delete Configuration List",
-                th_molecule: "Molecule", th_product: "Brand", th_sku: "SKU", th_supplier: "Supplier", th_notes: "Notes", th_milestone: "Milestone", th_status: "Status", th_start: "Plan Start", th_end: "Plan End", th_actual_start: "Actual Start", th_actual_end: "Actual End", th_progress: "Execution Status", th_view: "Track", th_action: "Actions",
+                th_product: "Brand", th_sku: "SKU", th_sku2: "Molecules Name", th_supplier: "Supplier", th_notes: "Notes", th_milestone: "Milestone", th_status: "Status", th_start: "Plan Start", th_end: "Plan End", th_actual_start: "Actual Start", th_actual_end: "Actual End", th_progress: "Execution Status", th_view: "Track", th_action: "Actions",
                 followup_title: "Actuals vs Forecast Update", followup_desc: "Update dates here. Execution status is auto-calculated.", edit_title: "Update Progress Dates",
                 dash_brands: "Total Logged Items", dash_miles: "Planned Milestones", dash_completed: "Completed Milestones", dash_delayed: "Delayed Milestones", chart_status_title: "Auto Status Distribution (Click to Drilldown)", chart_brand_title: "Completion %", chart_delayed_title: "Most Delayed Milestones (Bottlenecks)", chart_supplier_title: "Completion Distribution by Supplier",
-                conf_mol_title: "Molecules (A-Z)", conf_p_title: "Brands (A-Z)", conf_sku_title: "SKUs (A-Z)", conf_supplier_title: "Suppliers (A-Z)", conf_m_title: "Milestones (Custom)", conf_s_title: "Desc Status (A-Z)",
+                conf_p_title: "Brands (A-Z)", conf_sku_title: "SKUs (A-Z)", conf_sku2_title: "Molecules Names (A-z)", conf_supplier_title: "Suppliers (A-Z)", conf_m_title: "Milestones (Custom)", conf_s_title: "Desc Status (A-Z)",
                 status_notstarted: "Not Started ⏳", status_delayed: "Delayed 🚨", status_progress: "In Progress 🔄", status_completed: "Completed ✅",
-                msg_dup_conf: "Entry already exists!", msg_dup_mile: "Alert: Milestone already exists for this Molecule and SKU.", msg_overlap: "Alert: Planned dates overlap with another milestone for this Molecule/SKU.", msg_date_err: "Error: Plan Start date must be before Plan End date!", msg_cannot_delete: "Sorry, cannot delete! This list or item is currently used in the tracking records."
+                msg_dup_conf: "Entry already exists!", msg_dup_mile: "Alert: Milestone already exists for this Brand and SKU.", msg_overlap: "Alert: Planned dates overlap with another milestone for this SKU.", msg_date_err: "Error: Plan Start date must be before Plan End date!", msg_cannot_delete: "Sorry, cannot delete! This list is used."
             }
         };
 
@@ -648,13 +623,14 @@
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 milestonesData = data.milestonesData || []; 
-                confMolecules = data.confMolecules ? sortArray(data.confMolecules) : [];
-                confProducts = data.confProducts ? sortArray(data.confProducts) : [];
-                confSkus = data.confSkus ? sortArray(data.confSkus) : []; 
-                confSuppliers = data.confSuppliers ? sortArray(data.confSuppliers) : [];
-                confMilestones = data.confMilestones || []; 
-                confStatus = data.confStatus ? sortArray(data.confStatus) : [];
-                customLists = data.customLists || {}; 
+                
+                confProducts = sortArray(data.confProducts || data.products || []);
+                confSkus = sortArray(data.confSkus || data.skus || []); 
+                confSkus2 = sortArray(data.confSkus2 || data.skus2 || []); 
+                confSuppliers = sortArray(data.confSuppliers || data.suppliers || []);
+                confMilestones = data.confMilestones || data.milestones || []; 
+                confStatus = sortArray(data.confStatus || data.status || []);
+                
                 hiddenCoreLists = data.hiddenCoreLists || [];
             }
             applyHiddenLists();
@@ -663,7 +639,6 @@
         });
 
         function applyHiddenLists() {
-            // Apply CSS classes to body to hide entire columns, inputs, and cards dynamically
             Object.keys(coreListsMap).forEach(key => {
                 const bodyHasClass = document.body.classList.contains('hide-' + key);
                 const shouldHide = hiddenCoreLists.includes(key);
@@ -671,28 +646,55 @@
                 else if (!shouldHide && bodyHasClass) document.body.classList.remove('hide-' + key);
             });
 
-            // Adjust form validation requirement for hidden lists
-            if(document.getElementById('moleculeName')) document.getElementById('moleculeName').required = !hiddenCoreLists.includes('molecules');
-            if(document.getElementById('productName')) document.getElementById('productName').required = false; // Always optional
+            if(document.getElementById('productName')) document.getElementById('productName').required = false; 
             if(document.getElementById('skuName')) document.getElementById('skuName').required = !hiddenCoreLists.includes('skus');
+            if(document.getElementById('sku2Name')) document.getElementById('sku2Name').required = true; 
             if(document.getElementById('supplierName')) document.getElementById('supplierName').required = !hiddenCoreLists.includes('suppliers');
             if(document.getElementById('milestone')) document.getElementById('milestone').required = !hiddenCoreLists.includes('milestones');
             if(document.getElementById('mainStatus')) document.getElementById('mainStatus').required = !hiddenCoreLists.includes('status');
         }
 
+        function fillDropdown(elementId, dataArray, defaultText, allowEmpty = false) {
+            const selectElement = document.getElementById(elementId);
+            if (!selectElement) return;
+
+            const currentValue = selectElement.value;
+            selectElement.innerHTML = '';
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.text = '-- ' + defaultText + ' --';
+            if (!allowEmpty) defaultOption.disabled = true;
+            if (!currentValue) defaultOption.selected = true;
+            selectElement.appendChild(defaultOption);
+
+            const itemsToIterate = Array.isArray(dataArray) ? dataArray : Object.values(dataArray || {});
+
+            itemsToIterate.forEach(item => {
+                if (item) {
+                    const opt = document.createElement('option');
+                    opt.value = String(item).trim();
+                    opt.text = translateItem(String(item).trim());
+                    if (String(item).trim() === String(currentValue).trim()) opt.selected = true;
+                    selectElement.appendChild(opt);
+                }
+            });
+        }
+
         function renderConfig() {
-            const populate = (id, arr, defaultTxt, allowEmpty = false) => {
-                const el = document.getElementById(id); if(!el) return;
-                el.innerHTML = `<option value="" ${allowEmpty ? '' : 'disabled'} selected>-- ${defaultTxt} --</option>`;
-                arr.forEach(item => el.innerHTML += `<option value="${item}">${translateItem(item)}</option>`);
-            };
-            populate('moleculeName', confMolecules, 'Select'); 
-            populate('productName', confProducts, currentLang === 'ar'?'بدون علامة تجارية':'No Brand', true);
-            populate('skuName', confSkus, 'Select'); populate('supplierName', confSuppliers, 'Select'); populate('milestone', confMilestones, 'Select'); populate('mainStatus', confStatus, 'Select');
+            const selectText = currentLang === 'ar' ? 'اختر' : 'Select';
+            
+            fillDropdown('productName', confProducts, currentLang === 'ar' ? 'بدون علامة تجارية' : 'No Brand', true);
+            fillDropdown('skuName', confSkus, selectText); 
+            fillDropdown('sku2Name', confSkus2, selectText); 
+            fillDropdown('supplierName', confSuppliers, selectText); 
+            fillDropdown('milestone', confMilestones, selectText); 
+            fillDropdown('mainStatus', confStatus, selectText);
             
             const popList = (id, arr, type) => {
                 const el = document.getElementById(id); if(!el) return; el.innerHTML = '';
-                arr.forEach((item, i) => {
+                const items = Array.isArray(arr) ? arr : Object.values(arr || {});
+                items.forEach((item, i) => {
                     let sortHTML = '';
                     if (type === 'milestones') {
                         sortHTML = `<div class="sort-btns"><button class="sort-btn" onclick="moveMilestone(${i}, -1)">⬆️</button><button class="sort-btn" onclick="moveMilestone(${i}, 1)">⬇️</button></div>`;
@@ -700,44 +702,45 @@
                     el.innerHTML += `<li><span>${translateItem(item)}</span><div style="display:flex; gap:10px;">${sortHTML}<button class="action-btn btn-delete" onclick="deleteConfigItem('${type}', ${i})">✖</button></div></li>`;
                 });
             };
-            popList('moleculesList', confMolecules, 'molecules'); popList('productsList', confProducts, 'products'); popList('skusList', confSkus, 'skus'); popList('suppliersList', confSuppliers, 'suppliers'); popList('milestonesList', confMilestones, 'milestones'); popList('statusList', confStatus, 'status');
             
-            // Render Dynamic Lists
-            const dContainer = document.getElementById('dynamicConfigsContainer');
-            dContainer.innerHTML = '';
-            Object.keys(customLists).forEach(listName => {
-                let html = `
-                <div class="config-card">
-                    <div class="config-summary" onclick="toggleConfig(this)">
-                        <h3 style="margin:0; color:var(--accent-blue);">${listName}</h3><span class="caret">▼</span>
-                    </div>
-                    <div class="config-content">
-                        <div style="display:flex; gap:10px;"><input type="text" id="input_${listName}"><button class="btn-add-sm" onclick="addCustomItem('${listName}')">${translations[currentLang].btn_add_sm}</button></div>
-                        <ul class="config-list">`;
-                customLists[listName].forEach((item, idx) => {
-                     html += `<li><span>${item}</span><button class="action-btn btn-delete" onclick="deleteCustomItem('${listName}', ${idx})">✖</button></li>`;
-                });
-                html += `</ul></div></div>`;
-                dContainer.innerHTML += html;
-            });
+            popList('productsList', confProducts, 'products'); 
+            popList('skusList', confSkus, 'skus'); 
+            popList('skus2List', confSkus2, 'skus2'); 
+            popList('suppliersList', confSuppliers, 'suppliers'); 
+            popList('milestonesList', confMilestones, 'milestones'); 
+            popList('statusList', confStatus, 'status');
         }
 
         window.addConfig = (type) => {
-            const map = { molecules:{arr:confMolecules, id:'newMoleculeInput', sort:true}, products:{arr:confProducts, id:'newProductInput', sort:true}, skus:{arr:confSkus, id:'newSkuInput', sort:true}, suppliers:{arr:confSuppliers, id:'newSupplierInput', sort:true}, milestones:{arr:confMilestones, id:'newMilestoneInput', sort:false}, status:{arr:confStatus, id:'newStatusInput', sort:true} };
+            const map = { 
+                products:{arr:confProducts, id:'newProductInput', sort:true}, 
+                skus:{arr:confSkus, id:'newSkuInput', sort:true}, 
+                skus2:{arr:confSkus2, id:'newSku2Input', sort:true}, 
+                suppliers:{arr:confSuppliers, id:'newSupplierInput', sort:true}, 
+                milestones:{arr:confMilestones, id:'newMilestoneInput', sort:false}, 
+                status:{arr:confStatus, id:'newStatusInput', sort:true} 
+            };
             const input = document.getElementById(map[type].id); const val = input.value.trim();
+            
             if(val) {
-                if (map[type].arr.some(item => item.toLowerCase() === val.toLowerCase())) return alert(translations[currentLang].msg_dup_conf);
-                map[type].arr.push(val); 
-                let arrToSave = map[type].sort ? sortArray(map[type].arr) : map[type].arr;
-                setDoc(globalDocRef, {['conf'+type.charAt(0).toUpperCase()+type.slice(1)]: arrToSave}, {merge:true}); 
+                const currentArr = Array.isArray(map[type].arr) ? map[type].arr : Object.values(map[type].arr || {});
+                if (currentArr.some(item => String(item).toLowerCase() === val.toLowerCase())) return alert(translations[currentLang].msg_dup_conf);
+                
+                currentArr.push(val); 
+                let arrToSave = map[type].sort ? sortArray(currentArr) : currentArr;
+                
+                let fireBaseField = 'conf' + type.charAt(0).toUpperCase() + type.slice(1);
+                setDoc(globalDocRef, {[fireBaseField]: arrToSave}, {merge:true}); 
                 input.value=''; 
             }
         }
         
-        // Delete a single item inside a core list
         window.deleteConfigItem = (type, idx) => {
-            const mapArrays = { 'molecules': confMolecules, 'products': confProducts, 'skus': confSkus, 'suppliers': confSuppliers, 'milestones': confMilestones, 'status': confStatus };
-            const targetArray = mapArrays[type]; const targetProp = corePropsMap[type]; const itemToDelete = targetArray[idx];
+            const mapArrays = { 'products': confProducts, 'skus': confSkus, 'skus2': confSkus2, 'suppliers': confSuppliers, 'milestones': confMilestones, 'status': confStatus };
+            let targetArray = Array.isArray(mapArrays[type]) ? mapArrays[type] : Object.values(mapArrays[type] || {});
+            
+            const targetProp = corePropsMap[type]; 
+            const itemToDelete = targetArray[idx];
             
             if (milestonesData.some(record => record[targetProp] === itemToDelete)) return alert(translations[currentLang].msg_cannot_delete);
 
@@ -747,92 +750,18 @@
             } else { alert(currentLang === 'ar' ? 'كلمة مرور خاطئة!' : 'Wrong password!'); }
         }
 
-        // --- Dynamic Lists Logic ---
-        window.addNewCustomList = () => {
-            const listName = prompt(currentLang === 'ar' ? "أدخل اسم القائمة الجديدة:" : "Enter new list name:");
-            if (!listName || listName.trim() === '') return;
-            if (customLists[listName] || Object.keys(coreListsMap).includes(listName)) return alert(currentLang === 'ar' ? "موجودة مسبقاً!" : "List exists!");
-            customLists[listName] = []; setDoc(globalDocRef, { customLists }, { merge: true });
-        }
-
-        window.addCustomItem = (listName) => {
-            const input = document.getElementById(`input_${listName}`); const val = input.value.trim();
-            if(!val) return;
-            if (customLists[listName].some(i => i.toLowerCase() === val.toLowerCase())) return alert(translations[currentLang].msg_dup_conf);
-            customLists[listName].push(val); customLists[listName] = sortArray(customLists[listName]);
-            setDoc(globalDocRef, { customLists }, { merge: true }); input.value = '';
-        }
-
-        window.deleteCustomItem = (listName, idx) => {
-            const itemToDelete = customLists[listName][idx];
-            if (milestonesData.some(rec => Object.values(rec).includes(itemToDelete))) return alert(translations[currentLang].msg_cannot_delete);
-            if(prompt('Password:') === ADMIN_PWD) { customLists[listName].splice(idx, 1); setDoc(globalDocRef, { customLists }, { merge: true }); }
-            else { alert(currentLang === 'ar' ? 'كلمة مرور خاطئة!' : 'Wrong password!'); }
-        }
-
-        // --- Complete List Deletion Logic ---
-        window.openDeleteListModal = () => {
-            const select = document.getElementById('listToDelete');
-            select.innerHTML = `<option value="" disabled selected>-- ${currentLang==='ar'?'اختر القائمة':'Select List'} --</option>`;
-            
-            // Populate Core Lists (if not already hidden)
-            Object.keys(coreListsMap).forEach(key => {
-                if(!hiddenCoreLists.includes(key)) {
-                    select.innerHTML += `<option value="core_${key}">${translations[currentLang][coreListsMap[key]]}</option>`;
-                }
-            });
-            // Populate Custom Lists
-            Object.keys(customLists).forEach(list => select.innerHTML += `<option value="custom_${list}">${list}</option>`);
-            
-            document.getElementById('deleteListModal').classList.add('active');
-        }
-        window.closeDeleteListModal = () => document.getElementById('deleteListModal').classList.remove('active');
-
-        window.confirmDeleteList = async () => {
-            const val = document.getElementById('listToDelete').value;
-            if(!val) return;
-            
-            const isCore = val.startsWith('core_');
-            const listName = isCore ? val.replace('core_', '') : val.replace('custom_', '');
-            
-            // Check History (Prevent deletion if any record uses it)
-            let isUsed = false;
-            if (isCore) {
-                const prop = corePropsMap[listName];
-                isUsed = milestonesData.some(rec => rec[prop] !== undefined && rec[prop] !== "");
-            } else {
-                const items = customLists[listName];
-                isUsed = milestonesData.some(rec => items.some(v => Object.values(rec).includes(v)));
-            }
-            
-            if(isUsed) return alert(translations[currentLang].msg_cannot_delete);
-            
-            if(prompt(currentLang === 'ar' ? 'أدخل كلمة المرور 1234 للتأكيد:' : 'Password:') === ADMIN_PWD) {
-                try {
-                    if(isCore) {
-                        hiddenCoreLists.push(listName);
-                        await updateDoc(globalDocRef, { hiddenCoreLists: hiddenCoreLists });
-                    } else {
-                        // Use deleteField() to completely wipe out the custom list from Firestore
-                        await updateDoc(globalDocRef, { [`customLists.${listName}`]: deleteField() });
-                    }
-                    closeDeleteListModal();
-                } catch(e) { console.error("Error deleting list", e); }
-            } else { alert(currentLang === 'ar' ? 'كلمة مرور خاطئة!' : 'Wrong password!'); }
-        }
-
         window.moveMilestone = (idx, direction) => {
             if(prompt('Password:') !== ADMIN_PWD) return;
-            if (direction === -1 && idx > 0) [confMilestones[idx - 1], confMilestones[idx]] = [confMilestones[idx], confMilestones[idx - 1]];
-            else if (direction === 1 && idx < confMilestones.length - 1) [confMilestones[idx + 1], confMilestones[idx]] = [confMilestones[idx], confMilestones[idx + 1]];
-            setDoc(globalDocRef, { confMilestones: confMilestones }, {merge:true});
+            let currentArr = Array.isArray(confMilestones) ? confMilestones : Object.values(confMilestones || {});
+            if (direction === -1 && idx > 0) [currentArr[idx - 1], currentArr[idx]] = [currentArr[idx], currentArr[idx - 1]];
+            else if (direction === 1 && idx < currentArr.length - 1) [currentArr[idx + 1], currentArr[idx]] = [currentArr[idx], currentArr[idx + 1]];
+            setDoc(globalDocRef, { confMilestones: currentArr }, {merge:true});
         }
 
-        // --- Data Logic ---
-        function checkDateOverlap(mol, sku, newStart, newEnd, excludeIndex = -1) {
+        function checkDateOverlap(product, sku, newStart, newEnd, excludeIndex = -1) {
             const start = new Date(newStart); const end = new Date(newEnd);
             return milestonesData.some((item, idx) => {
-                if (idx === excludeIndex || item.molecule !== mol || item.skuName !== sku) return false;
+                if (idx === excludeIndex || item.productName !== product || item.skuName !== sku) return false;
                 return (start <= new Date(item.endDate) && end >= new Date(item.startDate));
             });
         }
@@ -848,21 +777,21 @@
 
         document.getElementById('trackerForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const mol = document.getElementById('moleculeName').value || ""; 
-            const product = document.getElementById('productName').value || ""; // Optional
+            const product = document.getElementById('productName').value || ""; 
             const sku = document.getElementById('skuName').value || "";
+            const sku2 = document.getElementById('sku2Name').value || "";
             const ms = document.getElementById('milestone').value || "";
             
-            if(!hiddenCoreLists.includes('molecules') && !hiddenCoreLists.includes('milestones') && !hiddenCoreLists.includes('skus')) {
-                if(milestonesData.some(i => i.molecule === mol && i.skuName === sku && i.milestone === ms)) return alert(translations[currentLang].msg_dup_mile);
+            if(!hiddenCoreLists.includes('milestones') && !hiddenCoreLists.includes('skus')) {
+                if(milestonesData.some(i => i.productName === product && i.skuName === sku && i.milestone === ms)) return alert(translations[currentLang].msg_dup_mile);
             }
             
             const pStart = document.getElementById('startDate').value; const pEnd = document.getElementById('endDate').value;
             if(new Date(pStart) > new Date(pEnd)) return alert(translations[currentLang].msg_date_err);
-            if (!hiddenCoreLists.includes('molecules') && !hiddenCoreLists.includes('skus') && checkDateOverlap(mol, sku, pStart, pEnd)) return alert(translations[currentLang].msg_overlap);
+            if (!hiddenCoreLists.includes('skus') && checkDateOverlap(product, sku, pStart, pEnd)) return alert(translations[currentLang].msg_overlap);
 
             milestonesData.push({ 
-                molecule: mol, productName: product, skuName: sku, 
+                productName: product, skuName: sku, sku2Name: sku2,
                 supplier: document.getElementById('supplierName').value || "", 
                 milestone: ms, mainStatus: document.getElementById('mainStatus').value || "", 
                 startDate: pStart, endDate: pEnd, notes: document.getElementById('notesInput').value, 
@@ -878,13 +807,12 @@
             milestonesData.slice().reverse().forEach((item, index) => {
                 const actIdx = milestonesData.length - 1 - index;
                 const sInfo = calculateProgressStatus(item.startDate, item.endDate, item.actualStartDate, item.actualEndDate);
-                const dispMol = item.molecule ? translateItem(item.molecule) : '-';
                 const dispBrand = item.productName ? translateItem(item.productName) : '-';
                 
                 tbodyTracker.innerHTML += `<tr>
-                    <td class="col_molecules"><strong style="color:var(--accent-blue)">${dispMol}</strong></td>
-                    <td class="col_products">${dispBrand}</td>
+                    <td class="col_products"><strong style="color:var(--accent-blue)">${dispBrand}</strong></td>
                     <td class="col_skus">${item.skuName||'-'}</td>
+                    <td class="col_skus2">${item.sku2Name||'-'}</td>
                     <td class="col_suppliers">${item.supplier||'-'}</td>
                     <td class="col_milestones">${translateItem(item.milestone) || '-'}</td>
                     <td class="nowrap-col">${item.startDate}</td><td class="nowrap-col">${item.endDate}</td>
@@ -892,9 +820,9 @@
                 </tr>`;
 
                 tbodyFollowup.innerHTML += `<tr>
-                    <td class="col_molecules"><strong style="color:var(--accent-blue)">${dispMol}</strong></td>
-                    <td class="col_products">${dispBrand}</td>
+                    <td class="col_products"><strong style="color:var(--accent-blue)">${dispBrand}</strong></td>
                     <td class="col_skus">${item.skuName||'-'}</td>
+                    <td class="col_skus2">${item.sku2Name||'-'}</td>
                     <td class="col_milestones">${translateItem(item.milestone) || '-'}</td>
                     <td class="nowrap-col">${item.startDate}</td><td class="nowrap-col" style="color:#60a5fa; font-weight:bold;">${item.actualStartDate||'--'}</td>
                     <td class="nowrap-col">${item.endDate}</td><td class="nowrap-col" style="color:#60a5fa; font-weight:bold;">${item.actualEndDate||'--'}</td>
@@ -911,17 +839,22 @@
             
             const item = milestonesData[actIdx];
             document.getElementById('visualTrackerCard').style.display = 'block';
-            document.getElementById('trackerTitle').innerText = `${translateItem(item.molecule)} | SKU: ${item.skuName}`;
+            let titleText = item.productName ? translateItem(item.productName) + ' | ' : '';
+            titleText += `SKU: ${item.skuName}`;
+            if(item.sku2Name) titleText += ` | Molecule: ${item.sku2Name}`;
+            document.getElementById('trackerTitle').innerText = titleText;
             
-            const records = milestonesData.filter(i => i.molecule === item.molecule && i.skuName === item.skuName);
+            const records = milestonesData.filter(i => i.productName === item.productName && i.skuName === item.skuName);
             let html = ''; let highestCompletedIdx = -1; let activeIdx = -1;
             
-            confMilestones.forEach((m, idx) => {
+            const cMilestones = Array.isArray(confMilestones) ? confMilestones : Object.values(confMilestones || {});
+            
+            cMilestones.forEach((m, idx) => {
                 const rec = records.find(r => r.milestone === m);
                 if(rec && calculateProgressStatus(rec.startDate, rec.endDate, rec.actualStartDate, rec.actualEndDate).raw === 'Completed') highestCompletedIdx = Math.max(highestCompletedIdx, idx);
             });
 
-            confMilestones.forEach((m, idx) => {
+            cMilestones.forEach((m, idx) => {
                 let sClass = '', icon = idx + 1;
                 const rec = records.find(r => r.milestone === m);
                 let stat = rec ? calculateProgressStatus(rec.startDate, rec.endDate, rec.actualStartDate, rec.actualEndDate).raw : 'Not Started';
@@ -934,8 +867,8 @@
             
             let targetIdx = activeIdx !== -1 ? activeIdx : highestCompletedIdx;
             let progressPercent = 0;
-            if (confMilestones.length > 1 && targetIdx > 0) progressPercent = (targetIdx / (confMilestones.length - 1)) * 83.33;
-            if (targetIdx === confMilestones.length - 1 && highestCompletedIdx === targetIdx) progressPercent = 83.33; 
+            if (cMilestones.length > 1 && targetIdx > 0) progressPercent = (targetIdx / (cMilestones.length - 1)) * 83.33;
+            if (targetIdx === cMilestones.length - 1 && highestCompletedIdx === targetIdx) progressPercent = 83.33; 
             
             const lineDir = currentLang === 'ar' ? 'right' : 'left';
             document.getElementById('stepperContainer').innerHTML = `<div style="position: absolute; top: 20px; ${lineDir}: 8.33%; height: 4px; background-color: #1e293b; width: 83.33%; z-index: 1;"></div><div class="progress-line" style="${lineDir}: 8.33%; width: ${progressPercent}%; z-index: 2;"></div>${html}`;
@@ -946,7 +879,7 @@
         window.openUpdateModal = (idx) => {
             const item = milestonesData[idx];
             document.getElementById('editIndex').value = idx;
-            document.getElementById('editMoleculeBrand').value = translateItem(item.molecule||'-') + (item.productName ? " ("+item.productName+")" : "");
+            document.getElementById('editItemName').value = (item.productName ? item.productName + " - " : "") + (item.skuName || "");
             document.getElementById('editMilestone').value = translateItem(item.milestone||'-');
             document.getElementById('editPlanStart').value = item.startDate; document.getElementById('editPlanEnd').value = item.endDate;     
             document.getElementById('editActualStart').value = item.actualStartDate || ''; document.getElementById('editActualEnd').value = item.actualEndDate || '';
@@ -972,10 +905,10 @@
 
         window.exportToExcel = () => {
             if (milestonesData.length === 0) return;
-            let csv = currentLang === 'ar' ? "\uFEFFالمادة الفعالة,العلامة التجارية,رمز الوحدة (SKU),المورد,المرحلة,تاريخ البدء المخطط,تاريخ الانتهاء المخطط,تاريخ البدء الفعلي,تاريخ الانتهاء الفعلي,حالة التنفيذ\n" : "\uFEFFMolecule,Brand,SKU,Supplier,Milestone,Plan Start,Plan End,Actual Start,Actual End,Execution Status\n";
+            let csv = currentLang === 'ar' ? "\uFEFFالعلامة التجارية,رمز الوحدة (SKU),المادة الفعالة (Molecules Name),المورد,المرحلة,تاريخ البدء المخطط,تاريخ الانتهاء المخطط,تاريخ البدء الفعلي,تاريخ الانتهاء الفعلي,حالة التنفيذ\n" : "\uFEFFBrand,SKU,Molecules Name,Supplier,Milestone,Plan Start,Plan End,Actual Start,Actual End,Execution Status\n";
             milestonesData.forEach(i => { 
                 const sInfo = calculateProgressStatus(i.startDate, i.endDate, i.actualStartDate, i.actualEndDate);
-                csv += `"${translateItem(i.molecule)}","${translateItem(i.productName||'')}","${i.skuName || ''}","${translateItem(i.supplier) || ''}","${translateItem(i.milestone)}","${i.startDate}","${i.endDate}","${i.actualStartDate || ''}","${i.actualEndDate || ''}","${sInfo.text}"\n`; 
+                csv += `"${translateItem(i.productName||'')}","${i.skuName || ''}","${i.sku2Name || ''}","${translateItem(i.supplier) || ''}","${translateItem(i.milestone)}","${i.startDate}","${i.endDate}","${i.actualStartDate || ''}","${i.actualEndDate || ''}","${sInfo.text}"\n`; 
             });
             const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
             link.download = `Actuals_Export_${new Date().toISOString().split('T')[0]}.csv`; link.click();
@@ -990,7 +923,7 @@
             let itemCounts = {};
             milestonesData.forEach(i => {
                 if(calculateProgressStatus(i.startDate, i.endDate, i.actualStartDate, i.actualEndDate).raw === chartStatusState.currentStatus) {
-                    let key = (i.molecule||'-') + (i.productName ? ` (${i.productName})` : '');
+                    let key = (i.productName ? `${i.productName} (${i.skuName})` : i.skuName) || '-';
                     itemCounts[key] = (itemCounts[key] || 0) + 1;
                 }
             });
@@ -1009,7 +942,7 @@
                 const stat = calculateProgressStatus(i.startDate, i.endDate, i.actualStartDate, i.actualEndDate).raw;
                 if(stat==='Completed') comp++; else if(stat==='Delayed') { del++; delayedStats[i.milestone] = (delayedStats[i.milestone]||0)+1; } else if(stat==='In Progress') prog++; else not++;
                 
-                let bKey = (i.molecule||'-') + (i.productName ? ` (${i.productName})` : '');
+                let bKey = (i.productName ? `${i.productName} (${i.skuName})` : i.skuName) || '-';
                 if(!brandStats[bKey]) brandStats[bKey] = {t:0, c:0};
                 brandStats[bKey].t++; if(stat==='Completed') brandStats[bKey].c++;
                 if(i.supplier) { if(!supplierStats[i.supplier]) supplierStats[i.supplier] = {t:0, c:0}; supplierStats[i.supplier].t++; if(stat==='Completed') supplierStats[i.supplier].c++; }
