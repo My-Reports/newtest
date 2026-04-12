@@ -78,7 +78,7 @@ body.mode-light {
 ---------------------------------------------------------------- */
 body.theme-sales   { --accent: #10B981; --accent-2: #06B6D4; } 
 body.theme-finance { --accent: #F59E0B; --accent-2: #EF4444; }
-body.theme-busdev  { --accent: #8B5CF6; --accent-2: #EC4899; } /* Business Dev Theme */
+body.theme-busdev  { --accent: #8B5CF6; --accent-2: #EC4899; } 
 body.theme-default { --accent: #21D4FD; --accent-2: #B721FF; }
 
 /* ----------------------------------------------------------------
@@ -163,7 +163,7 @@ body.screen-menu   { --safe-card-w: 900px; }
 .top-progress-bar.is-active { opacity: 1; }
 .top-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent-2); transition: width 300ms ease; border-radius: 0 2px 2px 0; }
 
-.topbar { position: relative; z-index: 6; display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(14px, 3vw, 26px); border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent); backdrop-filter: blur(8px); }
+.topbar { position: relative; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(14px, 3vw, 26px); border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent); backdrop-filter: blur(8px); }
 .brand { display: flex; align-items: center; gap: 12px; user-select: none; }
 .brand-logo-wrap { position: relative; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
 .brand-dot { width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 8%, transparent); position: relative; z-index: 1; transition: transform var(--trans-bounce); }
@@ -389,11 +389,32 @@ body.mode-dark .report-name { color: color-mix(in srgb, var(--accent) 20%, #fff 
    FLOATING MENU (Left Side & Dropdown)
 ---------------------------------------------------------------- */
 .floating-menu-wrap {
-  position: fixed;
+  position: fixed; /* Fallback for other departments */
   left: 20px; 
   top: calc(var(--topbar-h) + 16px);
   z-index: 999;
+  transition: all var(--trans);
 }
+
+/* التعديل الخاص بقسم البحث والتطوير: توسيط الزر في الهيدر */
+body.theme-busdev .floating-menu-wrap {
+  position: absolute; /* يتمركز بناءً على الهيدر لأنه بداخله الآن */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+
+body.theme-busdev .floating-dropdown {
+  left: 50%;
+  transform-origin: top center;
+  transform: translateY(-15px) translateX(-50%) scale(0.95);
+}
+
+body.theme-busdev .floating-menu-wrap.is-open .floating-dropdown {
+  transform: translateY(0) translateX(-50%) scale(1);
+}
+
 .floating-back {
   display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.3);
   background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #000;
@@ -482,6 +503,12 @@ iframe { flex: 1; width: 100%; border: none; background: transparent; border-rad
 ---------------------------------------------------------------- */
 @keyframes spin { to { transform: rotate(360deg); } }
 
+@media (max-width: 768px) {
+  body.theme-busdev .floating-menu-wrap {
+    transform: translate(-50%, -50%) scale(0.85); /* تصغير خفيف للزر ليناسب شاشات الموبايل */
+  }
+}
+
 @media (max-width: 520px) {
   body { overflow-y: auto; }
   .report-grid { grid-template-columns: 1fr; }
@@ -496,6 +523,12 @@ iframe { flex: 1; width: 100%; border: none; background: transparent; border-rad
   
   .report-title-bar { margin-inline-start: 0; }
   .floating-menu-wrap { top: 12px; left: 12px; }
+
+  /* إخفاء الساعة والترحيب في قسم البحث والتطوير على شاشات الجوال الصغيرة جداً لإفساح المجال للزر بالوسط */
+  body.theme-busdev .brand-datetime,
+  body.theme-busdev #userWelcome {
+    display: none !important;
+  }
 
   /* Mobile adjustment for welcome message */
   .user-welcome { padding: 4px 8px; }

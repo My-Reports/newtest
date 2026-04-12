@@ -46,6 +46,27 @@
       </div>
     </div>
 
+    <div id="floatingMenuWrap" class="floating-menu-wrap" style="display: none;">
+      <button id="floatingMenuToggle" class="floating-back" type="button" aria-label="Reports Menu">
+        <span class="back-icon">📑</span>
+        <span data-i18n="reportsMenu">قائمة التقارير</span>
+        <span class="menu-arrow">▼</span>
+      </button>
+      
+      <div class="floating-dropdown">
+        <div class="floating-dropdown-header" data-i18n="fastNav">التنقل السريع بين التقارير</div>
+        <div id="floatingDropdownList" class="floating-list">
+          </div>
+        <div class="divider"></div>
+        <button id="floatBackMain" class="floating-item item-secondary">
+          <span class="item-icon">🏠</span> <span data-i18n="backToReports">التقارير الرئيسية</span>
+        </button>
+        <button id="floatLogout" class="floating-item item-danger">
+          <span class="item-icon">🚪</span> <span data-i18n="logout">تسجيل خروج</span>
+        </button>
+      </div>
+    </div>
+
     <div class="topbar-actions">
       <div id="userWelcome" class="user-welcome" hidden>
         <span class="user-welcome-icon" aria-hidden="true">👋</span>
@@ -80,27 +101,6 @@
       <button class="icon-btn" id="toggleThemeBtn" type="button" aria-label="Toggle theme">🌓</button>
     </div>
   </header>
-
-  <div id="floatingMenuWrap" class="floating-menu-wrap" style="display: none;">
-    <button id="floatingMenuToggle" class="floating-back" type="button" aria-label="Reports Menu">
-      <span class="back-icon">📑</span>
-      <span data-i18n="reportsMenu">قائمة التقارير</span>
-      <span class="menu-arrow">▼</span>
-    </button>
-    
-    <div class="floating-dropdown">
-      <div class="floating-dropdown-header" data-i18n="fastNav">التنقل السريع بين التقارير</div>
-      <div id="floatingDropdownList" class="floating-list">
-        </div>
-      <div class="divider"></div>
-      <button id="floatBackMain" class="floating-item item-secondary">
-        <span class="item-icon">🏠</span> <span data-i18n="backToReports">التقارير الرئيسية</span>
-      </button>
-      <button id="floatLogout" class="floating-item item-danger">
-        <span class="item-icon">🚪</span> <span data-i18n="logout">تسجيل خروج</span>
-      </button>
-    </div>
-  </div>
 
   <div id="topProgressBar" class="top-progress-bar" aria-hidden="true">
     <div class="top-progress-fill"></div>
